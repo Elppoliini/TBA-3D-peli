@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemyHealth : MonoBehaviour
 {
@@ -7,6 +8,9 @@ public class EnemyHealth : MonoBehaviour
     public float sinkSpeed = 2.5f;
     public int scoreValue = 10;
     public AudioClip deathClip;
+
+    public GameObject healthBarUI;
+    public Slider sliderS;
 
 
     Animator anim;
@@ -25,12 +29,19 @@ public class EnemyHealth : MonoBehaviour
         capsuleCollider = GetComponent <CapsuleCollider> ();
 
         currentHealth = startingHealth;
+        sliderS.value = CalculateHealth();
     }
 
 
     void Update ()
     {
-        if(isSinking)
+
+        sliderS.value = CalculateHealth();
+        if (currentHealth < startingHealth)
+        {
+            healthBarUI.SetActive(true);
+        }
+        if (isSinking)
         {
             transform.Translate (-Vector3.up * sinkSpeed * Time.deltaTime);
         }
@@ -53,8 +64,10 @@ public class EnemyHealth : MonoBehaviour
             Death ();
         }
     }
-
-
+    float CalculateHealth()
+    {
+        return currentHealth - 20;
+    }
     void Death ()
     {
         isDead = true;
