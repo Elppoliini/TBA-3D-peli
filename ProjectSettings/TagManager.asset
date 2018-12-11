@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Pick Up
   - Ally
+  - FloorTag
   layers:
   - Default
   - TransparentFX

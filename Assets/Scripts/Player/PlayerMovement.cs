@@ -10,6 +10,9 @@ public class PlayerMovement : MonoBehaviour
     int floorMask;                      // A layer mask so that a ray can be cast just at gameobjects on the floor layer.
     float camRayLength = 100f;          // The length of the ray from the camera into the scene.
 
+    private int JumpCount = 0;          //Hyppy
+    public int maxJumps = 2;            //Hyppy
+
     void Awake()
     {
         // Create a layer mask for the floor layer.
@@ -18,8 +21,26 @@ public class PlayerMovement : MonoBehaviour
         // Set up references.
         anim = GetComponent<Animator>();
         playerRigidbody = GetComponent<Rigidbody>();
+
+
     }
 
+    private void Start()
+    {
+        JumpCount = maxJumps; //Hyppy
+    }
+
+    private void Update() //Hyppy
+    {
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (JumpCount > 0)
+            {
+                jump();
+            }
+        }
+    }
 
     void FixedUpdate()
     {
@@ -36,6 +57,7 @@ public class PlayerMovement : MonoBehaviour
         // Animate the player.
         Animating(h, v);
     }
+
 
     void Move(float h, float v)
     {
@@ -82,6 +104,22 @@ public class PlayerMovement : MonoBehaviour
         // Tell the animator whether or not the player is walking.
         anim.SetBool("IsWalking", walking);
     }
+
+
+    public void jump() //hyppy
+    {
+        playerRigidbody.AddForce(new Vector3(0, 7, 0), ForceMode.Impulse);
+        JumpCount -= 1;
+    }
+
+    private void OnCollisionEnter(Collision col) //Hyppy
+    {
+        if (col.gameObject.tag == "FloorTag")
+        {
+            JumpCount = maxJumps;
+        }
+    }
+
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Pick Up"))
@@ -89,4 +127,6 @@ public class PlayerMovement : MonoBehaviour
             other.gameObject.SetActive(false);
         }
     }
+
+
 }
